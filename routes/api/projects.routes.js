@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const router = express.Router();
 
+const Images = require('../../models/Images.model');
 const Projects = require('../../models/Projects.model');
 const jwtOptions = require('../../config/jwtOptions');
 
@@ -16,6 +17,14 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {id} = req.params;
   Projects.getProject({id}).then(project => res.json(project));
+});
+
+// get project
+router.get('/:id/images', passport.authenticate('jwt', {session: false}), async (req, res) => {
+  const userId = req.user.id;
+  const {id} = req.params;
+  const images = await Images.getImagesByProject({id, userId});
+  res.json(images);
 });
 
 // create project

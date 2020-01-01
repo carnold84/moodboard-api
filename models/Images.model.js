@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const database = require('./database');
 
+const ImageProject = require('./ImageProject.model');
+
 // create image model
 const Image = database.define('image', {
   name: {
@@ -23,25 +25,36 @@ Image.sync()
   .catch(err => console.log('oooh, did you enter wrong database credentials?'));
 
 // create some helper functions to work on the database
-Image.createImage = async ({name, description, userId}) => {
-  return await Image.create({name, description, url, userId});
+Image.createImage = async ({description, name, projectId, url, userId}) => {
+  const image = await Image.create({description, name, url, userId});
+  if (projectId) {
+    ImageProject.create({imageId: image.id, projectId});
+  }
+  return image;
 };
 
-Image.updateImage = async obj => {
-  return await Image.update(obj, {
-    where: {id: obj.id},
+Image.updateImage = async ({id, userId, ...rest}) => {
+  return await Image.update({...rest}, {
+    where: {id, userId},
   });
 };
 
-Image.getImagesByUser = async obj => {
+Image.getImagesByProject = async ({id, userId}) => {
+  const imageProjects = await ImageProject.findAll({
+    where: {projectId: id},
+  });
+  const imageIds = imageProjects.map(value => {
+    return value.imageId;
+  });
+  console.log('imageIds', imageIds, userId);
   return await Image.findAll({
-    where: obj,
+    where: {id: imageIds, userId},
   });
 };
 
-Image.getImagesByProject = async obj => {
+Image.getImagesByUser = async id => {
   return await Image.findAll({
-    where: obj,
+    where: {userId: id},
   });
 };
 
@@ -49,15 +62,15 @@ Image.getAllImages = async () => {
   return await Image.findAll();
 };
 
-Image.getImage = async obj => {
+Image.getImage = async ({id, userId}) => {
   return await Image.findOne({
-    where: obj,
+    where: {id, userId},
   });
 };
 
-Image.deleteImage = async obj => {
+Image.deleteImage = async ({id, userId}) => {
   return await Image.destroy({
-    where: obj,
+    where: {id, userId},
   });
 };
 
