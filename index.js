@@ -19,7 +19,6 @@ if (!isProduction) {
   app.use(errorHandler());
 }
 
-require('./models/Users.model');
 require('./config/passport');
 app.use(require('./routes'));
 
