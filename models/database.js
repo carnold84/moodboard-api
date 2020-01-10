@@ -2,9 +2,9 @@ const Sequelize = require('sequelize');
 
 // initialze an instance of Sequelize
 const database = new Sequelize({
-  database: 'users_test_db',
-  username: 'root',
-  password: '',
+  database: process.env.DATABASE_NAME || 'users_test_db',
+  username: process.env.DATABASE_USER || 'root',
+  password: process.env.DATABASE_PASSWORD || '',
   dialect: 'mysql',
 });
 
