@@ -1,14 +1,19 @@
-const express = require('express');
 const bodyParser = require('body-parser');
-const passport = require('passport');
+const cors = require('cors')
 const errorHandler = require('errorhandler');
+const express = require('express');
+const passport = require('passport');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 const APP_PORT = process.env.APP_PORT || 8000;
 
-// initialize passport with express
+const corsOptions = {
+  origin: '*'
+};
+
+app.use(cors(corsOptions));
 app.use(passport.initialize());
 
 // parse application/json

@@ -46,7 +46,6 @@ Image.getImagesByProject = async ({id, userId}) => {
   const imageIds = imageProjects.map(value => {
     return value.imageId;
   });
-  console.log('imageIds', imageIds, userId);
   return await Image.findAll({
     where: {id: imageIds, userId},
   });

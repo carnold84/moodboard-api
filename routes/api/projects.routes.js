@@ -1,16 +1,14 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const router = express.Router();
 
 const Images = require('../../models/Images.model');
 const Projects = require('../../models/Projects.model');
-const jwtOptions = require('../../config/jwtOptions');
 
 // get all projects
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   const userId = req.user.id;
-  Projects.getProjectsByUser({userId}).then(project => res.json(project));
+  Projects.getProjectsByUser({userId}).then(projects => res.json(projects));
 });
 
 // get project
