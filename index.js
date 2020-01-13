@@ -1,8 +1,11 @@
 const bodyParser = require('body-parser');
 const cors = require('cors')
+const dotenv = require('dotenv');
 const errorHandler = require('errorhandler');
 const express = require('express');
 const passport = require('passport');
+
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 

@@ -21,7 +21,6 @@ Project.sync()
   .then(() => console.log('Project table created successfully'))
   .catch(err => console.log('oooh, did you enter wrong database credentials?'));
 
-// create some helper functions to work on the database
 Project.createProject = async ({ name, description, userId }) => {
   return await Project.create({ name, description, userId });
 };

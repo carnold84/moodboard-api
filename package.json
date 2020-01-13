@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cloudinary": "^1.18.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "errorhandler": "^1.5.1",
@@ -23,6 +24,7 @@
     "sequelize": "^5.21.3"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.2"
   }
 }

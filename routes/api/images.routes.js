@@ -43,13 +43,13 @@ router.put('/', passport.authenticate('jwt', {session: false}), async (req, res,
   res.json({image, msg: 'Image updated successfully'});
 });
 
-// create image
+// delete image
 router.delete('/:id', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
   const userId = req.user.id.toString();
   const {id} = req.params;
-  const image = await Images.deleteImage({id, userId});
+  const imageId = await Images.deleteImage({id, userId});
 
-  res.json({image, msg: 'Image deleted successfully'})
+  res.json({imageId, msg: 'Image deleted successfully'})
 });
 
 module.exports = router;
