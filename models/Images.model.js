@@ -119,6 +119,10 @@ Image.deleteImage = async ({ id, userId }) => {
     await deleteFromCloudinary(image.fileName);
   }
 
+  await ImageProject.destroy({
+    where: { imageId: id },
+  });
+
   await Image.destroy({
     where: { id, userId },
   });
