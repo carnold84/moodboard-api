@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const database = require('./database');
 
 const ImageProject = require('./ImageProject.model');
+const LinkProject = require('./LinkProject.model');
 
 // create project model
 const Project = database.define('project', {
@@ -24,6 +25,7 @@ Project.sync()
 Project.createProject = async ({ name, description, userId }) => {
   let project = await Project.create({ name, description, userId });
   project.dataValues.imageIds = [];
+  project.dataValues.linkIds = [];
   return project;
 };
 
@@ -44,6 +46,7 @@ Project.getProjectsByUser = async obj => {
   for (i; i < numProjects; i++) {
     const project = projects[i];
     project.dataValues.imageIds = await getImageIds(project.id);
+    project.dataValues.linkIds = await getLinkIds(project.id);
   }
 
   return projects;
@@ -60,6 +63,20 @@ const getImageIds = async projectId => {
 
   return imageProjects.map(imageProject => {
     return imageProject.imageId;
+  });
+};
+
+const getLinkIds = async projectId => {
+  const linkProjects = await LinkProject.findAll({
+    where: { projectId },
+  });
+
+  if (linkProjects.length === 0) {
+    return [];
+  }
+
+  return linkProjects.map(linkProject => {
+    return linkProject.linkId;
   });
 };
 
