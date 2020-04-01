@@ -14,7 +14,14 @@ router.get('/', passport.authenticate('jwt', {session: false}), function(req, re
 // get all users
 router.get('/:id', passport.authenticate('jwt', {session: false}), function(req, res) {
   const {id} = req.params;
-  Users.getUser({id}).then(user => res.json(user));
+
+  Users.getUser({id}).then(user => {
+    // delete sensitive data
+    delete user.dataValues.hash;
+    delete user.dataValues.salt;
+
+    res.json(user);
+  });
 });
 
 // register route
@@ -36,7 +43,7 @@ router.post('/login', async function(req, res, next) {
       // only personalized value that goes into our token
       let payload = {id: user.id};
       let token = jwt.sign(payload, jwtOptions.secretOrKey);
-      res.json({msg: 'ok', token: token});
+      res.json({id: user.id, msg: 'ok', token: token});
     } else {
       res.status(401).json({msg: 'Email or password is incorrect'});
     }

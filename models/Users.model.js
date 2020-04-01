@@ -36,10 +36,7 @@ User.createUser = async ({email, name, password}) => {
 };
 
 User.validatePassword = ({user, password}) => {
-  console.log('validatePassword', user.salt, password)
   const hash = createHash(password, user.salt);
-  console.log('new hash', hash)
-  console.log('hash', user.hash)
   return user.hash === hash;
 };
 

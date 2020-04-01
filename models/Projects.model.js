@@ -22,7 +22,9 @@ Project.sync()
   .catch(err => console.log('oooh, did you enter wrong database credentials?'));
 
 Project.createProject = async ({ name, description, userId }) => {
-  return await Project.create({ name, description, userId });
+  let project = await Project.create({ name, description, userId });
+  project.dataValues.imageIds = [];
+  return project;
 };
 
 Project.updateProject = async obj => {
@@ -51,6 +53,10 @@ const getImageIds = async projectId => {
   const imageProjects = await ImageProject.findAll({
     where: { projectId },
   });
+
+  if (imageProjects.length === 0) {
+    return [];
+  }
 
   return imageProjects.map(imageProject => {
     return imageProject.imageId;
