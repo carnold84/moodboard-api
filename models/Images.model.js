@@ -5,6 +5,8 @@ const database = require('./database');
 
 const ImageProject = require('./ImageProject.model');
 
+const Op = Sequelize.Op;
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -96,9 +98,14 @@ Image.getImagesByProject = async ({ id, userId }) => {
   });
 };
 
-Image.getImagesByUser = async id => {
+Image.getImagesByUser = async (id, exclude = []) => {
   return await Image.findAll({
-    where: { userId: id },
+    where: {
+      userId: id,
+      id: {
+        [Op.notIn]: exclude
+      },
+    },
   });
 };
 

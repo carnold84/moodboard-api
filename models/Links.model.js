@@ -74,12 +74,12 @@ Link.getLink = async ({ id, userId }) => {
 };
 
 Link.deleteLink = async ({ id, userId }) => {
-  await LinkProject.destroy({
-    where: { linkId: id },
-  });
-
   await Link.destroy({
     where: { id, userId },
+  });
+  
+  await LinkProject.destroy({
+    where: { linkId: id },
   });
 
   return id;

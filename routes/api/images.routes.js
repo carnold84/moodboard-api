@@ -6,7 +6,9 @@ const Images = require('../../models/Images.model');
 
 // get all images
 router.get('/', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  const images = await Images.getImagesByUser(req.user.id);
+  const exclude = req.params.exclude;
+  const images = await Images.getImagesByUser(req.user.id, exclude);
+
   res.json(images);
 });
 
