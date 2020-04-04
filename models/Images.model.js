@@ -86,6 +86,16 @@ Image.updateImage = async ({ id, userId, ...rest }) => {
   });
 };
 
+Image.linkToProject = async ({ imageId, projectId }) => {
+  return await ImageProject.create({ imageId, projectId });
+};
+
+Image.unlinkFromProject = async ({ imageId, projectId }) => {
+  return await ImageProject.destroy({
+    where: { imageId, projectId },
+  });
+};
+
 Image.getImagesByProject = async ({ id, userId }) => {
   const imageProjects = await ImageProject.findAll({
     where: { projectId: id },

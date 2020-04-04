@@ -4,6 +4,8 @@ const database = require('./database');
 
 const LinkProject = require('./LinkProject.model');
 
+const Op = Sequelize.Op;
+
 // create link model
 const Link = database.define('link', {
   description: {
@@ -39,6 +41,16 @@ Link.createLink = async ({ description, name, projectId, url, userId }) => {
   return link;
 };
 
+Link.linkToProject = async ({ linkId, projectId }) => {
+  return await LinkProject.create({ linkId, projectId });
+};
+
+Link.unlinkFromProject = async ({ linkId, projectId }) => {
+  return await LinkProject.destroy({
+    where: { linkId, projectId },
+  });
+};
+
 Link.updateLink = async ({ id, userId, ...rest }) => {
   return await Link.update({ ...rest }, {
     where: { id, userId },
@@ -57,9 +69,12 @@ Link.getLinksByProject = async ({ id, userId }) => {
   });
 };
 
-Link.getLinksByUser = async id => {
+Link.getLinksByUser = async (id, exclude) => {
   return await Link.findAll({
     where: { userId: id },
+    id: {
+      [Op.notIn]: exclude
+    },
   });
 };
 
@@ -77,7 +92,7 @@ Link.deleteLink = async ({ id, userId }) => {
   await Link.destroy({
     where: { id, userId },
   });
-  
+
   await LinkProject.destroy({
     where: { linkId: id },
   });

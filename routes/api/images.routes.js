@@ -37,6 +37,22 @@ router.post('/', passport.authenticate('jwt', {session: false}), async (req, res
   res.json({image, msg: 'Image created successfully'});
 });
 
+// link an image to a project
+router.post('/link-to-project', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+  const { imageId, projectId } = req.body;
+  await Images.linkToProject({ imageId, projectId });
+
+  res.json({ ids: { imageId, projectId }, msg: 'Image linked successfully' });
+});
+
+// link an image to a project
+router.post('/unlink-from-project', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+  const { imageId, projectId } = req.body;
+  await Images.unlinkFromProject({ imageId, projectId });
+
+  res.json({ ids: { imageId, projectId }, msg: 'Image unlinked successfully' });
+});
+
 // update image
 router.put('/', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
   const userId = req.user.id.toString();
