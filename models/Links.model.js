@@ -69,12 +69,25 @@ Link.getLinksByProject = async ({ id, userId }) => {
   });
 };
 
-Link.getLinksByUser = async (id, exclude) => {
+Link.getLinksByUser = async (userId, {exclude, ids}) => {
+  let whereStatement = {
+    userId,
+  };
+
+  if(exclude) {
+    whereStatement.id = {
+      [Op.notIn]: exclude,
+    };
+  }
+
+  if(ids) {
+    whereStatement.id = {
+      [Op.in]: ids,
+    };
+  }
+  
   return await Link.findAll({
-    where: { userId: id },
-    id: {
-      [Op.notIn]: exclude
-    },
+    where: whereStatement,
   });
 };
 

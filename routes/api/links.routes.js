@@ -6,8 +6,11 @@ const Links = require('../../models/Links.model');
 
 // get all links
 router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  const exclude = req.params.exclude;
-  const links = await Links.getLinksByUser(req.user.id, exclude);
+  const ids = req.param('ids');
+  const exclude = req.param('exclude');
+  console.log(exclude)
+  const links = await Links.getLinksByUser(req.user.id, {exclude, ids});
+
   res.json(links);
 });
 

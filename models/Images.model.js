@@ -108,14 +108,25 @@ Image.getImagesByProject = async ({ id, userId }) => {
   });
 };
 
-Image.getImagesByUser = async (id, exclude = []) => {
+Image.getImagesByUser = async (userId, {exclude, ids}) => {
+  let whereStatement = {
+    userId,
+  };
+
+  if(exclude) {
+    whereStatement.id = {
+      [Op.notIn]: exclude,
+    };
+  }
+
+  if(ids) {
+    whereStatement.id = {
+      [Op.in]: ids,
+    };
+  }
+  
   return await Image.findAll({
-    where: {
-      userId: id,
-      id: {
-        [Op.notIn]: exclude
-      },
-    },
+    where: whereStatement,
   });
 };
 
