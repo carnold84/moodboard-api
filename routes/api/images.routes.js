@@ -6,8 +6,8 @@ const Images = require('../../models/Images.model');
 
 // get all images
 router.get('/', passport.authenticate('jwt', {session: false}), async (req, res) => {
-  const ids = req.param('ids');
-  const exclude = req.param('exclude');
+  const ids = req.query.ids;
+  const exclude = req.query.exclude;
   const images = await Images.getImagesByUser(req.user.id, {exclude, ids});
 
   res.json(images);
@@ -57,7 +57,7 @@ router.post('/unlink-from-project', passport.authenticate('jwt', { session: fals
 // update image
 router.put('/', passport.authenticate('jwt', {session: false}), async (req, res, next) => {
   const userId = req.user.id.toString();
-  const image = Images.updateImage({...req.body, userId});
+  const image = await Images.updateImage({...req.body, userId});
 
   res.json({image, msg: 'Image updated successfully'});
 });

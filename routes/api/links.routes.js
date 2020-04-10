@@ -6,9 +6,8 @@ const Links = require('../../models/Links.model');
 
 // get all links
 router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  const ids = req.param('ids');
-  const exclude = req.param('exclude');
-  console.log(exclude)
+  const ids = req.query.ids;
+  const exclude = req.query.exclude;
   const links = await Links.getLinksByUser(req.user.id, {exclude, ids});
 
   res.json(links);
@@ -58,7 +57,7 @@ router.post('/unlink-from-project', passport.authenticate('jwt', { session: fals
 // update link
 router.put('/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   const userId = req.user.id.toString();
-  const link = Links.updateLink({ ...req.body, userId });
+  const link = await Links.updateLink({ ...req.body, userId });
 
   res.json({ link, msg: 'Link updated successfully' });
 });

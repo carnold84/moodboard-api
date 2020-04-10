@@ -81,9 +81,19 @@ Image.createImage = async ({ description, name, projectId, url, userId }) => {
 };
 
 Image.updateImage = async ({ id, userId, ...rest }) => {
-  return await Image.update({ ...rest }, {
+  await Image.update({ ...rest }, {
     where: { id, userId },
   });
+  const Images = await Image.findAll({
+    where: {
+      userId,
+      id: {
+        [Op.in]: [id],
+      },
+    },
+  });
+
+  return Images[0];
 };
 
 Image.linkToProject = async ({ imageId, projectId }) => {

@@ -41,9 +41,9 @@ router.put('/', passport.authenticate('jwt', {session: false}), async (req, res,
 
   // make sure it's their project
   if (userId === user.id.toString()) {
-    Projects.updateProject({description, id, name}).then(project =>
-      res.json({project, msg: 'Project updated successfully'}),
-    );
+    Projects.updateProject({description, id, name, userId}).then(project => {
+      return res.json({project, msg: 'Project updated successfully'});
+    });
   } else {
     res.status(404).json({msg: 'Project not found.'});
   }

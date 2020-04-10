@@ -52,9 +52,19 @@ Link.unlinkFromProject = async ({ linkId, projectId }) => {
 };
 
 Link.updateLink = async ({ id, userId, ...rest }) => {
-  return await Link.update({ ...rest }, {
+  await Link.update({ ...rest }, {
     where: { id, userId },
   });
+  const Links = await Link.findAll({
+    where: {
+      userId,
+      id: {
+        [Op.in]: [id],
+      },
+    },
+  });
+
+  return Links[0];
 };
 
 Link.getLinksByProject = async ({ id, userId }) => {

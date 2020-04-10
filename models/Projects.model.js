@@ -4,6 +4,8 @@ const database = require('./database');
 const ImageProject = require('./ImageProject.model');
 const LinkProject = require('./LinkProject.model');
 
+const Op = Sequelize.Op;
+
 // create project model
 const Project = database.define('project', {
   name: {
@@ -29,10 +31,24 @@ Project.createProject = async ({ name, description, userId }) => {
   return project;
 };
 
-Project.updateProject = async obj => {
-  return await Project.update(obj, {
-    where: { id: obj.id },
+Project.updateProject = async ({ id, userId, ...rest }) => {
+  await Project.update({ ...rest }, {
+    where: { id, userId },
   });
+  const projects = await Project.findAll({
+    where: {
+      userId,
+      id: {
+        [Op.in]: [id],
+      },
+    },
+  });
+  let project = projects[0];
+
+  project.dataValues.imageIds = await getImageIds(project.id);
+  project.dataValues.linkIds = await getLinkIds(project.id);
+
+  return project;
 };
 
 Project.getProjectsByUser = async obj => {
