@@ -5,9 +5,11 @@ const errorHandler = require('errorhandler');
 const express = require('express');
 const passport = require('passport');
 
-dotenv.config();
-
 const isProduction = process.env.NODE_ENV === 'production';
+
+if (!isProduction) {
+  dotenv.config();
+}
 
 const app = express();
 const APP_PORT = process.env.APP_PORT || 8000;
